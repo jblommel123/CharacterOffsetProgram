@@ -1,5 +1,7 @@
 // CharacterOffsetProgram.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
+// Joseph Blommel
+// CIS 1202
+// 11/30/2021
 
 #include <iostream>
 #include <stdexcept>
@@ -9,43 +11,56 @@ char character(int, char);
 
 struct invalidCharacterException : public std::exception {
     const char * what() const throw () {
-        return "Invalid character";
+        return "Invalid character exception thrown.";
     }
 };
 
 struct invalidRangeException : public std::exception {
     const char * what() const throw () {
-        return "Invalid offset";
+        return "Invalid range exception thrown.";
     }
 };
 int main()
 {
     try {
-        std::cout << character(32, 'A') << std::endl;
+        //std::cout << character(1, 'a') << std::endl;
+        //std::cout << character(-1, 'a') << std::endl;
+        //std::cout << character(-1, 'Z') << std::endl;
+        //std::cout << character(5, '?') << std::endl;
+        std::cout << character(-25, 'z');
+        //std::cout << character(32, 'A') << std::endl;
    }
-    catch (std::out_of_range outOfRange){
-        std::cout << outOfRange.what();
+    catch (invalidRangeException invalid){
+        std::cout << invalid.what() << std::endl;
     }
-    
-    std::cout << (int)'z' << std::endl;
-    std::cout << (int)'a' << std::endl;
-    std::cout << (int)'Z' << std::endl;
-    std::cout << (int)'A' << std::endl;
+    catch (invalidCharacterException charex) {
+        std::cout << charex.what() << std::endl;
+    }
+    catch (std::exception& e){
+        std::cout << e.what() << std::endl;
+    }
+    //std::cout << (int)'z' << std::endl; //122
+    //std::cout << (int)'a' << std::endl; //97
+    //std::cout << (int)'Z' << std::endl; //90
+    //std::cout << (int)'A' << std::endl; //65
 
 }
 
 char character(int offset, char start) {
-
-    if (offset < 0 || offset > 25) {
-        throw std::out_of_range("Character Offset is out of range");
+    
+    if ((start < 'a' || start > 'z') && (start < 'A' || start > 'Z')) {
+        throw invalidCharacterException();
         }
 
-    if ((int)start < 65 || (int)start > 90)
-    {
-        throw std::out_of_range("Starting Character is out of range");
+    if (offset < -25 || offset > 25) {
+        throw invalidRangeException();
     }
         
     int newChar = offset + (int)start;
+
+    if ((newChar < 97 || newChar > 122) && (newChar < 65 || newChar > 90)) {
+        throw invalidRangeException();
+    }
         return (char)newChar;
 }
 
